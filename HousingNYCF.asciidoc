@@ -1,0 +1,720 @@
++*In[95]:*+
+[source, ipython3]
+----
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+----
+
+
++*In[96]:*+
+[source, ipython3]
+----
+df = pd.read_csv(r"C:\Users\hadyg\OneDrive\Desktop\Data Analyst\Projs\NY Housing\NY-House-Dataset.csv")
+print(df)
+----
+
+
++*Out[96]:*+
+----
+                                            BROKERTITLE                TYPE  \
+0           Brokered by Douglas Elliman  -111 Fifth Ave      Condo for sale   
+1                                   Brokered by Serhant      Condo for sale   
+2                                Brokered by Sowae Corp      House for sale   
+3                                   Brokered by COMPASS      Condo for sale   
+4     Brokered by Sotheby's International Realty - E...  Townhouse for sale   
+...                                                 ...                 ...   
+4796                                Brokered by COMPASS      Co-op for sale   
+4797                    Brokered by Mjr Real Estate Llc      Co-op for sale   
+4798      Brokered by Douglas Elliman - 575 Madison Ave      Co-op for sale   
+4799            Brokered by E Realty International Corp      Condo for sale   
+4800                 Brokered by Nyc Realty Brokers Llc      Co-op for sale   
+
+          PRICE  BEDS       BATH  PROPERTYSQFT  \
+0        315000     2   2.000000   1400.000000   
+1     195000000     7  10.000000  17545.000000   
+2        260000     4   2.000000   2015.000000   
+3         69000     3   1.000000    445.000000   
+4      55000000     7   2.373861  14175.000000   
+...         ...   ...        ...           ...   
+4796     599000     1   1.000000   2184.207862   
+4797     245000     1   1.000000   2184.207862   
+4798    1275000     1   1.000000   2184.207862   
+4799     598125     2   1.000000    655.000000   
+4800     349000     1   1.000000    750.000000   
+
+                                                ADDRESS  \
+0                                  2 E 55th St Unit 803   
+1     Central Park Tower Penthouse-217 W 57th New Yo...   
+2                                      620 Sinclair Ave   
+3                               2 E 55th St Unit 908W33   
+4                                           5 E 64th St   
+...                                                 ...   
+4796                               222 E 80th St Apt 3A   
+4797                                97-40 62 Dr Unit Lg   
+4798                          427 W 21st St Unit Garden   
+4799                           91-23 Corona Ave Unit 4G   
+4800                            460 Neptune Ave Apt 14O   
+
+                        STATE  \
+0          New York, NY 10022   
+1          New York, NY 10019   
+2     Staten Island, NY 10312   
+3         Manhattan, NY 10022   
+4          New York, NY 10065   
+...                       ...   
+4796      Manhattan, NY 10075   
+4797      Rego Park, NY 11374   
+4798       New York, NY 10011   
+4799       Elmhurst, NY 11373   
+4800       Brooklyn, NY 11224   
+
+                                           MAIN_ADDRESS  \
+0                2 E 55th St Unit 803New York, NY 10022   
+1     Central Park Tower Penthouse-217 W 57th New Yo...   
+2               620 Sinclair AveStaten Island, NY 10312   
+3            2 E 55th St Unit 908W33Manhattan, NY 10022   
+4                         5 E 64th StNew York, NY 10065   
+...                                                 ...   
+4796            222 E 80th St Apt 3AManhattan, NY 10075   
+4797             97-40 62 Dr Unit LgRego Park, NY 11374   
+4798        427 W 21st St Unit GardenNew York, NY 10011   
+4799         91-23 Corona Ave Unit 4GElmhurst, NY 11373   
+4800          460 Neptune Ave Apt 14OBrooklyn, NY 11224   
+
+     ADMINISTRATIVE_AREA_LEVEL_2         LOCALITY      SUBLOCALITY  \
+0                New York County         New York        Manhattan   
+1                  United States         New York  New York County   
+2                  United States         New York  Richmond County   
+3                  United States         New York  New York County   
+4                  United States         New York  New York County   
+...                          ...              ...              ...   
+4796                    New York  New York County         New York   
+4797               United States         New York    Queens County   
+4798               United States         New York  New York County   
+4799                    New York    Queens County           Queens   
+4800                    New York     Kings County         Brooklyn   
+
+                                      FORMATTED_ADDRESS  Unnamed: 13  
+0     Regis Residence, 2 E 55th St #803, New York, N...          NaN  
+1                217 W 57th St, New York, NY 10019, USA          NaN  
+2        620 Sinclair Ave, Staten Island, NY 10312, USA          NaN  
+3                  2 E 55th St, New York, NY 10022, USA          NaN  
+4                  5 E 64th St, New York, NY 10065, USA          NaN  
+...                                                 ...          ...  
+4796         222 E 80th St #3a, New York, NY 10075, USA          NaN  
+4797            97-40 62nd Dr, Rego Park, NY 11374, USA          NaN  
+4798             427 W 21st St, New York, NY 10011, USA          NaN  
+4799     91-23 Corona Ave. #4b, Flushing, NY 11373, USA          NaN  
+4800      460 Neptune Ave #14a, Brooklyn, NY 11224, USA          NaN  
+
+[4801 rows x 14 columns]
+----
+
+
++*In[97]:*+
+[source, ipython3]
+----
+print(df.columns)
+----
+
+
++*Out[97]:*+
+----
+Index(['BROKERTITLE', 'TYPE', 'PRICE', 'BEDS', 'BATH', 'PROPERTYSQFT',
+       'ADDRESS', 'STATE', 'MAIN_ADDRESS', 'ADMINISTRATIVE_AREA_LEVEL_2',
+       'LOCALITY', 'SUBLOCALITY', 'FORMATTED_ADDRESS', 'Unnamed: 13'],
+      dtype='object')
+----
+
+
++*In[98]:*+
+[source, ipython3]
+----
+df = df.drop(['Unnamed: 13', 'ADMINISTRATIVE_AREA_LEVEL_2'], axis=1)
+----
+
+
++*In[99]:*+
+[source, ipython3]
+----
+df['BROKERTITLE'] = df['BROKERTITLE'].str.replace(r'^Brokered by ', '',regex= True)
+print(df.columns)
+----
+
+
++*Out[99]:*+
+----
+Index(['BROKERTITLE', 'TYPE', 'PRICE', 'BEDS', 'BATH', 'PROPERTYSQFT',
+       'ADDRESS', 'STATE', 'MAIN_ADDRESS', 'LOCALITY', 'SUBLOCALITY',
+       'FORMATTED_ADDRESS'],
+      dtype='object')
+----
+
+
++*In[100]:*+
+[source, ipython3]
+----
+df.duplicated().sum()
+----
+
+
++*Out[100]:*+
+----np.int64(214)----
+
+
++*In[101]:*+
+[source, ipython3]
+----
+df.drop_duplicates(inplace=True)
+----
+
+
++*In[102]:*+
+[source, ipython3]
+----
+df.duplicated().sum()
+----
+
+
++*Out[102]:*+
+----np.int64(0)----
+
+
++*In[106]:*+
+[source, ipython3]
+----
+LOCALITY_count = df['LOCALITY'].value_counts()
+print(LOCALITY_count.to_string())
+print(df['SUBLOCALITY'].value_counts().to_string())
+----
+
+
++*Out[106]:*+
+----
+LOCALITY
+New York           2395
+New York County     930
+Queens County       536
+Kings County        442
+Bronx County        172
+Richmond County      58
+United States        37
+Queens                6
+Brooklyn              6
+The Bronx             4
+Flatbush              1
+SUBLOCALITY
+Manhattan           1259
+Queens              1189
+Brooklyn            1138
+Staten Island        519
+The Bronx            465
+Flushing               4
+Coney Island           3
+Riverdale              3
+East Bronx             1
+Jackson Heights        1
+Brooklyn Heights       1
+Rego Park              1
+Fort Hamilton          1
+Dumbo                  1
+Snyder Avenue          1
+----
+
+
++*In[107]:*+
+[source, ipython3]
+----
+df['SUBLOCALITY']=df['SUBLOCALITY'].replace(['New York','New York County'], 'Manhattan')
+df['SUBLOCALITY']=df['SUBLOCALITY'].replace(['Queens County'],'Queens')
+df['SUBLOCALITY']=df['SUBLOCALITY'].replace(['Bronx County'],'The Bronx')
+df['SUBLOCALITY']=df['SUBLOCALITY'].replace(['Kings County'],'Brooklyn')
+df['SUBLOCALITY']=df['SUBLOCALITY'].replace(['Richmond County'],'Staten Island')
+print(df['SUBLOCALITY'].value_counts().to_string())
+----
+
+
++*Out[107]:*+
+----
+SUBLOCALITY
+Manhattan           1259
+Queens              1189
+Brooklyn            1138
+Staten Island        519
+The Bronx            465
+Flushing               4
+Coney Island           3
+Riverdale              3
+East Bronx             1
+Jackson Heights        1
+Brooklyn Heights       1
+Rego Park              1
+Fort Hamilton          1
+Dumbo                  1
+Snyder Avenue          1
+----
+
+
++*In[109]:*+
+[source, ipython3]
+----
+ptd = ['Flushing', 'Riverdale', 'Coney Island', 'Fort Hamilton', 'Jackson Heights', 'Brooklyn Heights', 'Snyder Avenue', 'East Bronx', 'Rego Park', 'Dumbo']
+df = df[~df['SUBLOCALITY'].isin(ptd)]
+print(df['SUBLOCALITY'].value_counts().to_string())
+----
+
+
++*Out[109]:*+
+----
+SUBLOCALITY
+Manhattan        1259
+Queens           1189
+Brooklyn         1138
+Staten Island     519
+The Bronx         465
+----
+
+
++*In[110]:*+
+[source, ipython3]
+----
+df['PR_SQFT'] = df['PRICE']/df['PROPERTYSQFT']
+print(df)
+----
+
+
++*Out[110]:*+
+----
+                                            BROKERTITLE                TYPE  \
+0                       Douglas Elliman  -111 Fifth Ave      Condo for sale   
+1                                               Serhant      Condo for sale   
+2                                            Sowae Corp      House for sale   
+3                                               COMPASS      Condo for sale   
+4     Sotheby's International Realty - East Side Man...  Townhouse for sale   
+...                                                 ...                 ...   
+4796                                            COMPASS      Co-op for sale   
+4797                                Mjr Real Estate Llc      Co-op for sale   
+4798                  Douglas Elliman - 575 Madison Ave      Co-op for sale   
+4799                        E Realty International Corp      Condo for sale   
+4800                             Nyc Realty Brokers Llc      Co-op for sale   
+
+          PRICE  BEDS       BATH  PROPERTYSQFT  \
+0        315000     2   2.000000   1400.000000   
+1     195000000     7  10.000000  17545.000000   
+2        260000     4   2.000000   2015.000000   
+3         69000     3   1.000000    445.000000   
+4      55000000     7   2.373861  14175.000000   
+...         ...   ...        ...           ...   
+4796     599000     1   1.000000   2184.207862   
+4797     245000     1   1.000000   2184.207862   
+4798    1275000     1   1.000000   2184.207862   
+4799     598125     2   1.000000    655.000000   
+4800     349000     1   1.000000    750.000000   
+
+                                                ADDRESS  \
+0                                  2 E 55th St Unit 803   
+1     Central Park Tower Penthouse-217 W 57th New Yo...   
+2                                      620 Sinclair Ave   
+3                               2 E 55th St Unit 908W33   
+4                                           5 E 64th St   
+...                                                 ...   
+4796                               222 E 80th St Apt 3A   
+4797                                97-40 62 Dr Unit Lg   
+4798                          427 W 21st St Unit Garden   
+4799                           91-23 Corona Ave Unit 4G   
+4800                            460 Neptune Ave Apt 14O   
+
+                        STATE  \
+0          New York, NY 10022   
+1          New York, NY 10019   
+2     Staten Island, NY 10312   
+3         Manhattan, NY 10022   
+4          New York, NY 10065   
+...                       ...   
+4796      Manhattan, NY 10075   
+4797      Rego Park, NY 11374   
+4798       New York, NY 10011   
+4799       Elmhurst, NY 11373   
+4800       Brooklyn, NY 11224   
+
+                                           MAIN_ADDRESS         LOCALITY  \
+0                2 E 55th St Unit 803New York, NY 10022         New York   
+1     Central Park Tower Penthouse-217 W 57th New Yo...         New York   
+2               620 Sinclair AveStaten Island, NY 10312         New York   
+3            2 E 55th St Unit 908W33Manhattan, NY 10022         New York   
+4                         5 E 64th StNew York, NY 10065         New York   
+...                                                 ...              ...   
+4796            222 E 80th St Apt 3AManhattan, NY 10075  New York County   
+4797             97-40 62 Dr Unit LgRego Park, NY 11374         New York   
+4798        427 W 21st St Unit GardenNew York, NY 10011         New York   
+4799         91-23 Corona Ave Unit 4GElmhurst, NY 11373    Queens County   
+4800          460 Neptune Ave Apt 14OBrooklyn, NY 11224     Kings County   
+
+        SUBLOCALITY                                  FORMATTED_ADDRESS  \
+0         Manhattan  Regis Residence, 2 E 55th St #803, New York, N...   
+1         Manhattan             217 W 57th St, New York, NY 10019, USA   
+2     Staten Island     620 Sinclair Ave, Staten Island, NY 10312, USA   
+3         Manhattan               2 E 55th St, New York, NY 10022, USA   
+4         Manhattan               5 E 64th St, New York, NY 10065, USA   
+...             ...                                                ...   
+4796      Manhattan         222 E 80th St #3a, New York, NY 10075, USA   
+4797         Queens            97-40 62nd Dr, Rego Park, NY 11374, USA   
+4798      Manhattan             427 W 21st St, New York, NY 10011, USA   
+4799         Queens     91-23 Corona Ave. #4b, Flushing, NY 11373, USA   
+4800       Brooklyn      460 Neptune Ave #14a, Brooklyn, NY 11224, USA   
+
+           PR_SQFT  
+0       225.000000  
+1     11114.277572  
+2       129.032258  
+3       155.056180  
+4      3880.070547  
+...            ...  
+4796    274.241298  
+4797    112.168812  
+4798    583.735652  
+4799    913.167939  
+4800    465.333333  
+
+[4570 rows x 13 columns]
+----
+
+
++*In[111]:*+
+[source, ipython3]
+----
+avgPricePerCounty = df.groupby('SUBLOCALITY')['PR_SQFT'].mean().reset_index()
+avgPricePerCounty = avgPricePerCounty.sort_values(by='PR_SQFT', ascending=False)
+print(avgPricePerCounty)
+----
+
+
++*Out[111]:*+
+----
+     SUBLOCALITY      PR_SQFT
+1      Manhattan  1450.586360
+3  Staten Island   857.025124
+0       Brooklyn   692.515465
+2         Queens   457.366699
+4      The Bronx   374.564560
+----
+
+
++*In[112]:*+
+[source, ipython3]
+----
+avgPricePerCounty = avgPricePerCounty.sort_values(by='PR_SQFT', ascending=True)
+plt.barh(avgPricePerCounty['SUBLOCALITY'], avgPricePerCounty['PR_SQFT'],color='goldenrod')
+plt.xlabel('$ USD')
+plt.title('AVG price of a sqft in the 5 boroughs')
+----
+
+
++*Out[112]:*+
+----Text(0.5, 1.0, 'AVG price of a sqft in the 5 boroughs')
+![png](output_13_1.png)
+----
+
+
++*In[113]:*+
+[source, ipython3]
+----
+print(df['BROKERTITLE'].value_counts())
+----
+
+
++*Out[113]:*+
+----
+BROKERTITLE
+COMPASS                              435
+Douglas Elliman - 575 Madison Ave    109
+Brown Harris Stevens                  93
+Corcoran East Side                    86
+RE MAX Edge                           75
+                                    ... 
+MCVEY JOAN M                           1
+Alexander Madison Realty Inc           1
+Expert Homes Ny                        1
+Papa Realty                            1
+EXIT REALTY CENTRAL                    1
+Name: count, Length: 1036, dtype: int64
+----
+
+
++*In[114]:*+
+[source, ipython3]
+----
+df['BROKERTITLE']=df['BROKERTITLE'].replace(['Sotheby\'s International Realty - East Side Manhattan Brokerage'],'Sotheby\'s International Realty')
+df['BROKERTITLE']=df['BROKERTITLE'].replace(['Douglas Elliman - 575 Madison Ave'],'Douglas Elliman')
+----
+
+
++*In[115]:*+
+[source, ipython3]
+----
+bestTenBroks=df['BROKERTITLE'].value_counts().head(10)
+print(bestTenBroks)
+----
+
+
++*Out[115]:*+
+----
+BROKERTITLE
+COMPASS                             435
+Douglas Elliman                     109
+Brown Harris Stevens                 93
+Corcoran East Side                   86
+RE MAX Edge                          75
+Winzone Realty Inc                   64
+Sotheby's International Realty       59
+E Realty International Corp          58
+Serhant                              49
+RE MAX Real Estate Professionals     48
+Name: count, dtype: int64
+----
+
+
++*In[116]:*+
+[source, ipython3]
+----
+bestTenBroks.plot(kind='bar', color='goldenrod')
+plt.xlabel('Brokers')
+plt.xlabel('Num of properties')
+plt.title('The most 10 brokers with market share in NYC')
+----
+
+
++*Out[116]:*+
+----Text(0.5, 1.0, 'The most 10 brokers with market share in NYC')
+![png](output_17_1.png)
+----
+
+
++*In[117]:*+
+[source, ipython3]
+----
+print(df['TYPE'].value_counts().to_string())
+----
+
+
++*Out[117]:*+
+----
+TYPE
+Co-op for sale                1377
+House for sale                 966
+Condo for sale                 836
+Multi-family home for sale     699
+Townhouse for sale             288
+Pending                        229
+Contingent                      87
+Land for sale                   47
+For sale                        20
+Foreclosure                     14
+Condop for sale                  4
+Coming Soon                      2
+Mobile house for sale            1
+----
+
+
++*In[118]:*+
+[source, ipython3]
+----
+df['TYPE']=df['TYPE'].replace(['Condop for sale'],'Condo for sale')
+----
+
+
++*In[119]:*+
+[source, ipython3]
+----
+propSh=df.groupby(['TYPE']).size().reset_index(name='Count').sort_values(by='Count', ascending=False)
+print(propSh)
+----
+
+
++*Out[119]:*+
+----
+                          TYPE  Count
+0               Co-op for sale   1377
+6               House for sale    966
+2               Condo for sale    840
+9   Multi-family home for sale    699
+11          Townhouse for sale    288
+10                     Pending    229
+3                   Contingent     87
+7                Land for sale     47
+4                     For sale     20
+5                  Foreclosure     14
+1                  Coming Soon      2
+8        Mobile house for sale      1
+----
+
+
++*In[120]:*+
+[source, ipython3]
+----
+others=['Contingent','Land for sale','For sale','Foreclosure','Coming Soon','Mobile house for sale']
+sumOtherList = df[df['TYPE'].isin(others)].value_counts().sum()
+newR=pd.DataFrame({'TYPE':'other Listings','Count':[sumOtherList]})
+propSh=pd.concat([propSh,newR], ignore_index=True)
+print(propSh)
+----
+
+
++*Out[120]:*+
+----
+                          TYPE  Count
+0               Co-op for sale   1377
+1               House for sale    966
+2               Condo for sale    840
+3   Multi-family home for sale    699
+4           Townhouse for sale    288
+5                      Pending    229
+6                   Contingent     87
+7                Land for sale     47
+8                     For sale     20
+9                  Foreclosure     14
+10                 Coming Soon      2
+11       Mobile house for sale      1
+12              other Listings    171
+----
+
+
++*In[121]:*+
+[source, ipython3]
+----
+propSh = propSh[~propSh['TYPE'].isin(others)]
+print(propSh)
+----
+
+
++*Out[121]:*+
+----
+                          TYPE  Count
+0               Co-op for sale   1377
+1               House for sale    966
+2               Condo for sale    840
+3   Multi-family home for sale    699
+4           Townhouse for sale    288
+5                      Pending    229
+12              other Listings    171
+----
+
+
++*In[122]:*+
+[source, ipython3]
+----
+plt.pie(propSh['Count'], labels= propSh['TYPE'],autopct='%1.1f%%', shadow =True) 
+plt.tight_layout()
+----
+
+
++*Out[122]:*+
+----
+![png](output_23_0.png)
+----
+
+
++*In[123]:*+
+[source, ipython3]
+----
+propPrice=df[['TYPE','PRICE']]
+----
+
+
++*In[124]:*+
+[source, ipython3]
+----
+propPrice.boxplot(column='PRICE', by='TYPE',vert=False)
+plt.title('Property price in NYC')
+plt.xlabel('$ Million USD')
+plt.xlim(0,9000000)
+----
+
+
++*Out[124]:*+
+----(0.0, 9000000.0)
+![png](output_25_1.png)
+----
+
+
++*In[125]:*+
+[source, ipython3]
+----
+manProps=df.loc[(df['SUBLOCALITY']=='Manhattan')]
+manProps.boxplot(column='PRICE', by='TYPE',vert=False)
+plt.title('Property price in Manhatten')
+plt.xlabel('$ 10xMillion USD')
+plt.xlim(0,15000000)
+----
+
+
++*Out[125]:*+
+----(0.0, 15000000.0)
+![png](output_26_1.png)
+----
+
+
++*In[126]:*+
+[source, ipython3]
+----
+qnsProps=df.loc[(df['SUBLOCALITY']=='Queens')]
+qnsProps.boxplot(column='PRICE', by='TYPE',vert=False)
+plt.title('Property price in Queens')
+plt.xlabel('$ Million USD')
+plt.xlim(0,3500000)
+----
+
+
++*Out[126]:*+
+----(0.0, 3500000.0)
+![png](output_27_1.png)
+----
+
+
++*In[127]:*+
+[source, ipython3]
+----
+stProps=df.loc[(df['SUBLOCALITY']=='Staten Island')]
+stProps.boxplot(column='PRICE', by='TYPE',vert=False)
+plt.title('Property price in Staten Island')
+plt.xlabel('$ Million USD')
+plt.xlim(0, 2000000)
+----
+
+
++*Out[127]:*+
+----(0.0, 2000000.0)
+![png](output_28_1.png)
+----
+
+
++*In[128]:*+
+[source, ipython3]
+----
+bxProps=df.loc[(df['SUBLOCALITY']=='The Bronx')]
+bxProps.boxplot(column='PRICE', by='TYPE',vert=False)
+plt.title('Property price in Brooklyn')
+plt.xlabel('$ Million USD')
+plt.xlim(0, 2250000)
+----
+
+
++*Out[128]:*+
+----(0.0, 2250000.0)
+![png](output_29_1.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
